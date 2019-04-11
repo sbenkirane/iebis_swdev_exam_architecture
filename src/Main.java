@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Observer;
 
 /**
  * Try to modify this class only where is mentioned
@@ -6,40 +7,54 @@ import java.util.ArrayList;
  */
 
 
-public class Main {
+public class Main implements SubscriptionListener {
+
+    static SubscriptionListener subscription;
+    boolean isSubscribed;
+
+    @Override
+    public Boolean subscribed(User user) {
+        return isSubscribed;
+    }
 
     public static void main(String[] args) {
         User angelica = new User("Angelica", "", 23, "", "", "", User.Gender.Female);
 
         Show gameThrones = new Show("Game of Thrones"); // The argument is the name of the TV Show
-        Season gtSeason1 = new Season(1); // The argument is the number of the season
+        Season gtSeason1 = new Season(gameThrones.getName(), 1); // The argument is the number of the season
 
         gtSeason1.addFullSeason(createGotSeason1Episodes());
         gameThrones.addSeason(gtSeason1);
 
         // -----------------------
         // Implement here the code to make Angelica subscribes to Game of Thrones because is her favourite TV Show
-        // Add your code here
 
+        Boolean subscriptionStatus = angelica.isSubscribed(gameThrones, true, subscription);
 
         // -----------------------
-
 
         // New episode in season1
         Episode episodeExtra = new Episode(3000, "The making of Season 1"); // 3000 -> length of the episode in seconds(int), and Title of the episode
         gtSeason1.addEpisode(episodeExtra);
 
         // Because of the new episode added Angelica should receive a notification (for simplicity just print out the message in the console)
+        if (subscriptionStatus == true) {
+            System.out.println(angelica.getName() + ", the episode " + episodeExtra.getName() + " from the TV Show " + gameThrones.getName() + " is available!");
+        }
 
         // Fearing a leak of episodes HBO releases the whole season overnight
         System.out.println("------------- One year has passed -------------");
-        Season gtSeason2 = new Season(2);
+        Season gtSeason2 = new Season(gameThrones.getName(), 2);
         gtSeason2.addFullSeason(createGotSeason2Episodes());
         gameThrones.addSeason(gtSeason2);
 
         // Because of the full season added Angelica should receive a whole set of notifications regarding season 2
+        if (subscriptionStatus == true) {
+            for (int newEpisode = 0; newEpisode <= gtSeason2.getFullSeason().size()-1; newEpisode++) {
+                System.out.println(angelica.getName() + ", the episode " + gtSeason2.getFullSeason().get(newEpisode).getName()  + " from the TV Show " + gameThrones.getName() + " is available!");
+            }
+        }
     }
-
 
     public static ArrayList<Episode> createGotSeason1Episodes() {
         ArrayList<Episode> episodes = new ArrayList<>();
@@ -86,4 +101,5 @@ public class Main {
 
         return episodes;
     }
+
 }

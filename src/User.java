@@ -1,6 +1,7 @@
 public class User {
 
-    enum Gender {Male, Female};
+    enum Gender {Male, Female}
+
     String name;
     String emailAddress;
     int age;
@@ -18,4 +19,18 @@ public class User {
         this.zipCode = zipCode;
         this.gender = gender;
     }
+
+    public boolean isSubscribed(Show show, Boolean subscribe, SubscriptionListener subscription) {
+        return subscribe;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
 }
